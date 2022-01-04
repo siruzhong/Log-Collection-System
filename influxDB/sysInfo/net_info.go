@@ -89,5 +89,5 @@ func WritesNetRatePoints(netRateInfo *NetRateInfo) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("insert net rate success")
+	log.Println("insert net rate into InfluxDB success")
 }

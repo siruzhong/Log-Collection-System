@@ -1,7 +1,6 @@
 package sysInfo
 
 import (
-	"fmt"
 	client "github.com/influxdata/influxdb1-client/v2"
 	"github.com/shirou/gopsutil/cpu"
 	"influxDB/dao"
@@ -12,7 +11,6 @@ import (
 // GetCpuPercent 获取cpu占用率
 func GetCpuPercent() []float64 {
 	percent, _ := cpu.Percent(time.Second, false) // 获取cpu使用率
-	fmt.Printf("cpu percent:%v\n", percent[0])
 	return percent
 }
 
@@ -38,5 +36,5 @@ func WritesCpuPoints(percent float64) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("insert cpu percent success")
+	log.Println("insert cpu percent into InfluxDB success")
 }

@@ -57,5 +57,5 @@ func WritesDiskPoints(diskInfo *DiskInfo) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("insert disk info success")
+	log.Println("insert disk info into InfluxDB success")
 }

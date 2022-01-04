@@ -48,5 +48,5 @@ func WritesMemPoints(memInfo *MemInfo) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("insert mem info success")
+	log.Println("insert mem info into InfluxDB success")
 }
