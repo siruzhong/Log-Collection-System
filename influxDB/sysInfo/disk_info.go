@@ -1,8 +1,9 @@
-package main
+package sysInfo
 
 import (
 	client "github.com/influxdata/influxdb1-client/v2"
 	"github.com/shirou/gopsutil/disk"
+	"influxDB/dao"
 	"log"
 	"time"
 )
@@ -12,8 +13,8 @@ type DiskInfo struct {
 	PartitionUsageStat map[string]*disk.UsageStat // 分区使用统计情况(key为挂载点目录，value为UsageStat结构体)
 }
 
-// getDiskInfo 获取磁盘相关信息
-func getDiskInfo() *DiskInfo {
+// GetDiskInfo 获取磁盘相关信息
+func GetDiskInfo() *DiskInfo {
 	var diskInfo = &DiskInfo{PartitionUsageStat: make(map[string]*disk.UsageStat, 16)}
 	parts, _ := disk.Partitions(true) // 获取所有磁盘分区
 	for _, part := range parts {
@@ -23,8 +24,8 @@ func getDiskInfo() *DiskInfo {
 	return diskInfo
 }
 
-// writesDiskPoints 写入disk的Points数据到InfluxDB中
-func writesDiskPoints(diskInfo *DiskInfo) {
+// WritesDiskPoints 写入disk的Points数据到InfluxDB中
+func WritesDiskPoints(diskInfo *DiskInfo) {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  "monitor",
 		Precision: "s", // 精度，默认ns
@@ -52,7 +53,7 @@ func writesDiskPoints(diskInfo *DiskInfo) {
 		}
 		bp.AddPoint(pt)
 	}
-	err = cli.Write(bp)
+	err = dao.DB.Write(bp)
 	if err != nil {
 		log.Fatal(err)
 	}

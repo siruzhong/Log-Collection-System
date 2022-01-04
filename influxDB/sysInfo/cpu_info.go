@@ -1,22 +1,23 @@
-package main
+package sysInfo
 
 import (
 	"fmt"
 	client "github.com/influxdata/influxdb1-client/v2"
 	"github.com/shirou/gopsutil/cpu"
+	"influxDB/dao"
 	"log"
 	"time"
 )
 
-// getCpuPercent 获取cpu占用率
-func getCpuPercent() []float64 {
+// GetCpuPercent 获取cpu占用率
+func GetCpuPercent() []float64 {
 	percent, _ := cpu.Percent(time.Second, false) // 获取cpu使用率
 	fmt.Printf("cpu percent:%v\n", percent[0])
 	return percent
 }
 
-// getCpuPercent 写入CPU的Points数据到InfluxDB中
-func writesCpuPoints(percent float64) {
+// WritesCpuPoints 写入CPU的Points数据到InfluxDB中
+func WritesCpuPoints(percent float64) {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  "monitor",
 		Precision: "s", // 精度，默认ns
@@ -33,7 +34,7 @@ func writesCpuPoints(percent float64) {
 		log.Fatal(err)
 	}
 	bp.AddPoint(pt)
-	err = cli.Write(bp)
+	err = dao.DB.Write(bp)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
-	"logs-collection-system/common"
 	"logs-collection-system/conf"
 	"logs-collection-system/etcd"
 	"logs-collection-system/kafka"
@@ -12,17 +10,9 @@ import (
 )
 
 func main() {
-	// 获取本机IP
-	ip, err := common.GetNativeIP()
-	if err != nil {
-		logrus.Errorf("get ip failed,err:%v", err)
-		return
-	}
-	logrus.Infof("get ip success,ip:%s", ip)
-
 	// 1. 使用go-ini包读取config.ini获取初始化配置(etcd、kafka)
 	var config = new(conf.Config)
-	err = ini.MapTo(config, "./conf/config.ini") // 将配置文件转换为Config结构体
+	err := ini.MapTo(config, "./conf/config.ini") // 将配置文件转换为Config结构体
 	if err != nil {
 		logrus.Infof("load init config failed,err=%v", err)
 		return
@@ -46,14 +36,14 @@ func main() {
 	logrus.Info("init etcd success")
 
 	// 4. 从etcd中获取日志配置项(etcd中存放json日志配置项)
-	logConfigList, err := etcd.GetConf(fmt.Sprintf(config.EtcdConfig.Key, ip))
+	logConfigList, err := etcd.GetConf(config.EtcdConfig.Key)
 	if err != nil {
 		logrus.Errorf("get conf from etde err=%v", err)
 		return
 	}
 
 	// 5. 启动后台goroutine监听etcd中日志配置项是否变化
-	go etcd.WatchConf(fmt.Sprintf(config.EtcdConfig.Key, ip))
+	go etcd.WatchConf(config.EtcdConfig.Key)
 
 	// 6. 初始化全局tailTaskManager,为每个配置项创建一个日志收集任务,读取其中的内容写入msgChan,并循环监听获取新配置
 	err = tail.Init(logConfigList)

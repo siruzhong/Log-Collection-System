@@ -1,8 +1,9 @@
-package main
+package sysInfo
 
 import (
 	client "github.com/influxdata/influxdb1-client/v2"
 	"github.com/shirou/gopsutil/net"
+	"influxDB/dao"
 	"log"
 	"time"
 )
@@ -33,8 +34,8 @@ type NetIORate struct {
 	PacketsRecvRate float64 `json:"packets_recv_rate"` // 包接收速率
 }
 
-// getNetRateInfo
-func getNetRateInfo() *NetRateInfo {
+// GetNetRateInfo
+func GetNetRateInfo() *NetRateInfo {
 	var netInfo = &NetInfo{NetIOCountersStat: make(map[string]*net.IOCountersStat, 16)}
 	var netRateInfo = &NetRateInfo{NetRateInfo: make(map[string]*NetIORate, 16)}
 	currentTimeStamp := time.Now().Unix() // 获取当前时间戳
@@ -61,8 +62,8 @@ func getNetRateInfo() *NetRateInfo {
 	return netRateInfo
 }
 
-// writesNetRatePoints 写入netRate的Points数据到InfluxDB中
-func writesNetRatePoints(netRateInfo *NetRateInfo) {
+// WritesNetRatePoints 写入netRate的Points数据到InfluxDB中
+func WritesNetRatePoints(netRateInfo *NetRateInfo) {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  "monitor",
 		Precision: "s", // 精度，默认ns
@@ -84,7 +85,7 @@ func writesNetRatePoints(netRateInfo *NetRateInfo) {
 		}
 		bp.AddPoint(pt)
 	}
-	err = cli.Write(bp)
+	err = dao.DB.Write(bp)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,8 +1,9 @@
-package main
+package sysInfo
 
 import (
 	client "github.com/influxdata/influxdb1-client/v2"
 	"github.com/shirou/gopsutil/mem"
+	"influxDB/dao"
 	"log"
 	"time"
 )
@@ -15,15 +16,15 @@ type MemInfo struct {
 	UsedPercent float64 `json:"used_percent"`
 }
 
-// getMemInfo 获取内存相关数据
-func getMemInfo() *MemInfo {
+// GetMemInfo 获取内存相关数据
+func GetMemInfo() *MemInfo {
 	memData, _ := mem.VirtualMemory()
 	memInfo := &MemInfo{Total: memData.Total, Available: memData.Available, Used: memData.Used, UsedPercent: memData.UsedPercent}
 	return memInfo
 }
 
-// writesMemPoints 写入mem的Points数据到InfluxDB中
-func writesMemPoints(memInfo *MemInfo) {
+// WritesMemPoints 写入mem的Points数据到InfluxDB中
+func WritesMemPoints(memInfo *MemInfo) {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  "monitor",
 		Precision: "s", // 精度，默认ns
@@ -43,7 +44,7 @@ func writesMemPoints(memInfo *MemInfo) {
 		log.Fatal(err)
 	}
 	bp.AddPoint(pt)
-	err = cli.Write(bp)
+	err = dao.DB.Write(bp)
 	if err != nil {
 		log.Fatal(err)
 	}
