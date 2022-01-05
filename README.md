@@ -24,10 +24,6 @@
 
 基于上述缺点，于是希望能够开发一套能够自动监听日志配置变更、对于日志收集节点的状态能够准确获取、并且能够支持丰富水平拓展的日志收集系统。
 
-**其他**：[Filebeat：轻量型日志分析与 Elasticsearch | Elastic](https://www.elastic.co/cn/beats/filebeat)
-
-![image-20211115004003471](https://gitee.com/zhong_siru/images2/raw/master//img/image-20211115004003471.png)
-
 ## 1.3、架构设计
 
 **初想法**：将机器上的日志实时收集，统一的存储到中心系统，对日志建立索引，通过搜索即可快速找到对应的日志记录，最后提供一个界面友好的的web页面来实现日志的检索与展示。
