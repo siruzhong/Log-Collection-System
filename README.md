@@ -14,8 +14,7 @@
 
 **ELK日志监控系统**：“ELK”是三个开源项目的首字母缩写，这三个项目分别是：Elasticsearch、Logstash 和 Kibana。Elasticsearch 是一个搜索和分析引擎。Logstash 是服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到诸如 Elasticsearch 等“存储库”中。Kibana 则可以让用户在 Elasticsearch 中使用图形和图表对数据进行可视化。
 
-![输入图片说明](01_elk日志采集系统架构.png)
-
+![输入图片说明](images/01_elk%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84.png)
 
 **缺点**：
 
@@ -140,35 +139,35 @@ go run influxDB/main.go
 
 当启动系统性能指标采集模块时，服务会实时采集当前主机的cpu占用、磁盘、内存、网络速率各种指标指标写入InfluxDB时序数据库中
 
-![输入图片说明](05_性能指标写入InfluxDB.jpg)
+![输入图片说明](images/05_%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87%E5%86%99%E5%85%A5InfluxDB.jpg)
 
 然后我们可以通过可视化数据展示平台Grafana来通过各种图形表格来实时展示这些指标
 
 **网络速率**：
 
-![输入图片说明](18_net_rate_info.jpg)
+![输入图片说明](images/18_net_rate_info.jpg)
 
 **cpu占用率**
 
-![输入图片说明](20_cpu_percent.jpg)
+![输入图片说明](images/20_cpu_percent.jpg)
 
 **内存信息**
 
-![输入图片说明](09_mem_info.jpg)
+![输入图片说明](images/09_mem_info.jpg)
 
 **磁盘空间**
 
-![输入图片说明](16_disk_info.jpg)
+![输入图片说明](images/16_disk_info.jpg)
 
 ## 3.2、etcd配置中心可视化展示界面
 
 下图是etcd配置中心可视化操作页面，我们可以可视化的以键值对的形式配置日志收集项的配置，
 
-![输入图片说明](13_etcd可视化界面.jpg)
+![输入图片说明](images/13_etcd%E5%8F%AF%E8%A7%86%E5%8C%96%E7%95%8C%E9%9D%A2.jpg)
 
 这里的日志配置key为 /collect_log_conf，采用key-value的形式，value采用json的格式，包含收集日志的路径path和需要存放进kafka中的消息主题topic。如下图所示：
 
-![输入图片说明](02_etcd日志收集项配置.png)
+![输入图片说明](images/02_etcd%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E9%A1%B9%E9%85%8D%E7%BD%AE.png)
 
 这里的示例追踪本机路径下/Users/zhongsiru/GoProjects/src/log-collection-system/logs/web.log的日志文件，存入kafka中的主题为web
 
@@ -176,51 +175,51 @@ go run influxDB/main.go
 
 首先启动log agent日志收集模块，根据终端打印内容，首先可以看到首先加载初始化配置，然后分别初始化kafka和etcd，然后开启了一个日志收集任务，并实时追踪etcd中日志配置项中的日志文件，也就是上图中配置的 /Users/zhongsiru/GoProjects/src/log-collection-system/logs/web.log
 
-![输入图片说明](03_log_agent启动时.png)
+![输入图片说明](images/03_log_agent%E5%90%AF%E5%8A%A8%E6%97%B6.png)
 
 然后启动log transfer日志消费模块，根据终端打印内容可以同样是首先加载初始化配置，然后分别初始化kafka和etcd
 
-![输入图片说明](17_log_transfer启动时.jpg)
+![输入图片说明](images/17_log_transfer%E5%90%AF%E5%8A%A8%E6%97%B6.jpg)
 
 当log agent和log transfer都启动成功后，我们来到监听的web.log日志文件模拟写入1条日志：
 
-![输入图片说明](15_模拟日志文件web.log写入一条日志.jpg)
+![输入图片说明](images/15_%E6%A8%A1%E6%8B%9F%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6web.log%E5%86%99%E5%85%A5%E4%B8%80%E6%9D%A1%E6%97%A5%E5%BF%97.jpg)
 
 然后我们可以在log agent输出上看到它将这条新增的日志数据写入了kafka
 
-![输入图片说明](04_log_agent追踪变更日志写入kafka.jpg)
+![输入图片说明](images/04_log_agent%E8%BF%BD%E8%B8%AA%E5%8F%98%E6%9B%B4%E6%97%A5%E5%BF%97%E5%86%99%E5%85%A5kafka.jpg)
 
 同时查看log transfer输出，可以看到它收到了这条日志数据，并成功写入了elasticsearch中的区域为我们上述配置的web
 
-![输入图片说明](12_log_transfer写入es.jpg)
+![输入图片说明](images/12_log_transfer%E5%86%99%E5%85%A5es.jpg)
 
 然后我们可以来到 kibana可视化界面，能够在web类型中看到新增的日志，并且可以进行索引等各种操作
 
-![输入图片说明](08_kibana追踪新日志实时展示.jpg)
+![输入图片说明](images/08_kibana%E8%BF%BD%E8%B8%AA%E6%96%B0%E6%97%A5%E5%BF%97%E5%AE%9E%E6%97%B6%E5%B1%95%E7%A4%BA.jpg)
 
 如果我们再新增几条数据，kibana界面会实时更新展示并提供快速的索引功能
 
-![输入图片说明](06_模拟日志文件web.log.jpg)
+![输入图片说明](images/06_%E6%A8%A1%E6%8B%9F%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6web.log.jpg)
 
-![输入图片说明](10_kibana实时追踪显示日志文件中的变更.jpg)
+![输入图片说明](images/10_kibana%E5%AE%9E%E6%97%B6%E8%BF%BD%E8%B8%AA%E6%98%BE%E7%A4%BA%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E5%8F%98%E6%9B%B4.jpg)
 
 ## 3.4、日志收集项配置热推送
 
 如果我们修改etcd中的日志收集项，比如这里更改日志文件的路径path和要存入的区域topic都为net
 
-![输入图片说明](07_修改etcd配置.jpg)
+![输入图片说明](images/07_%E4%BF%AE%E6%94%B9etcd%E9%85%8D%E7%BD%AE.jpg)
 
 点击保存的一瞬间，log agent日志收集模块会立马监听到日志收集项的变化，立即从etcd获取新的日志收集项配置，然后停止先前的日志收集任务，立马启动一个新的日志收集任务，监听新的日志文件
 
-![输入图片说明](images/14_log_agent感知日志变更.jpg)
+![输入图片说明](images/14_log_agent%E6%84%9F%E7%9F%A5%E6%97%A5%E5%BF%97%E5%8F%98%E6%9B%B4.jpg)
 
 此时我们模拟在新的日志文件net.log作出日志变更，这里插入两条相同的数据
 
-![输入图片说明](images/19_模拟日志文件net.log变更.jpg)
+![输入图片说明](images/19_%E6%A8%A1%E6%8B%9F%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6net.log%E5%8F%98%E6%9B%B4.jpg)
 
 然后回到 kibana，我们选择net模块，就可以立马看到新增的net.log中的日志数据
 
-![输入图片说明](images/11_kibana更换为net模块同步新日志.jpg)
+
 
 以上过程就实现了配置变更的热部署与日志的重新收集加载
 
