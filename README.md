@@ -28,7 +28,7 @@
 
 **初想法**：将机器上的日志实时收集，统一的存储到中心系统，对日志建立索引，通过搜索即可快速找到对应的日志记录，最后提供一个界面友好的的web页面来实现日志的检索与展示。
 
-![日志收集系统](https://gitee.com/zhong_siru/images2/raw/master//img/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E7%B3%BB%E7%BB%9F.jpeg)
+![日志收集系统](https://gitee.com/bareth/images2/raw/master//img/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E7%B3%BB%E7%BB%9F.jpeg)
 
 其中`Log Agent`和`log tranfer`是我们要开发的，类似生产者消费者。其中`Log Agent`将来部署到需要收集日志的服务器上，将日志从业务线上拉取下来（业务线可能采用各种各样的语言开发，日志会写入文件中，也就是从文件中拉取）然后发到 Kafka 中，`log tranfer`负责从 Kafka 中取日志，Kafka 还可以做成集群的方式，可以用 Zookeerper 来维护集群的自动注册、自动发现等功能。取出来的日志由三种流向：
 
@@ -39,7 +39,7 @@
 
 ## 1.4、组件介绍
 
-![image-20211122191231381](https://gitee.com/zhong_siru/images2/raw/master//img/image-20211122191231381.png)
+![image-20211122191231381](https://gitee.com/bareth/images2/raw/master//img/image-20211122191231381.png)
 
 + `LogAgent`：日志收集客户端，用来收集服务器上的日志。
 + `Kafka`：高吞吐量的分布式队列（由著名职业社交公司LinkedIn开发，apache顶级开源项目）。
@@ -91,7 +91,7 @@
 
 ```shell
 # 1.克隆项目
-git clone https://gitee.com/zhong_siru/log-collection-system.git
+git clone https://gitee.com/bareth/log-collection-system.git
 
 # 2.下载依赖
 go mod tidy
