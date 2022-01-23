@@ -243,21 +243,21 @@ go run influxDB/main.go
 
 + **统一命名服务**（在分布式环境下，经常需要对应用/服务进行统一命名，例如域名服务，便于识别）
 
-  ![image-20211108130727653](https://gitee.com/zhong_siru/images/raw/master//img/image-20211108130727653.png)
+  ![image-20211108130727653](https://gitee.com/bareth/images/raw/master//img/image-20211108130727653.png)
 
 + **统一集群管理**（例如节点动态上下线）
 
-  ![image-20211108130920533](https://gitee.com/zhong_siru/images/raw/master//img/image-20211108130920533.png)
+  ![image-20211108130920533](https://gitee.com/bareth/images/raw/master//img/image-20211108130920533.png)
 
 + **软负载均衡**
 
-  ![image-20211108131220430](https://gitee.com/zhong_siru/images/raw/master//img/image-20211108131220430.png)
+  ![image-20211108131220430](https://gitee.com/bareth/images/raw/master//img/image-20211108131220430.png)
 
 ## 4.3、引入协程池
 
 当前适用于单机情况，基本通过单个协程对来的请求进行处理，在高并发情况下会出现单点压力，因此可以引入协程池动态创建管理协程，避免协程创建和销毁所占用的资源。
 
-![image-20211228095405893](https://gitee.com/zhong_siru/images2/raw/master//img/image-20211228095405893.png)
+![image-20211228095405893](https://gitee.com/bareth/images2/raw/master//img/image-20211228095405893.png)
 
 
 
